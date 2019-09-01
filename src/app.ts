@@ -5,6 +5,7 @@
 import express, { Application } from 'express'
 import socket from 'socket.io'
 import morgan from 'morgan'
+import nunjucks from 'nunjucks'
 
 /**
  * routers
@@ -48,7 +49,7 @@ class Main {
    * @pirvate
    */
   private mainRouter() {
-    this.app.use('/api', indexRouter)
+    this.app.use('', indexRouter)
   }
 
   /**
@@ -59,6 +60,12 @@ class Main {
     this.app.use(morgan('dev'))
     this.app.use(express.json())
     this.app.use(express.urlencoded({extended: false}))
+    this.app.use('/static', express.static('static'))
+    nunjucks.configure('views', {
+      express: this.app,
+      autoescape: true
+    })
+    this.app.set('view engine', 'html')
     this.mainRouter()
   }
 

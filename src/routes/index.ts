@@ -32,10 +32,16 @@ class Router {
    */
   public routeHandler() {
     /**
+     * render html view
+     */
+    this.router.get('/', (request: Request, response: Response) => {
+      response.render('frame.html')
+    })
+    /**
      * receive youtube video url and convert
      * @public
      */
-    this.router.get('/', async (request: Request, response: Response) => {
+    this.router.get('/ytdlmp3', async (request: Request, response: Response) => {
       const {videoUrl} = request.query
       if (!videoUrl) {
         return response.status(400).json({"error": 'fuck you asshole'})
@@ -46,12 +52,12 @@ class Router {
         ytmp3.downloadOneFile()
         .then((mp3File) => {
           const file = `./mp3/${mp3File}`
-          // response.download(file)
+          response.download(file)
 
-          response.writeHead(200, {
-            "Content-Type": "audio/mpeg3;audio/x-mpeg-3;video/mpeg;video/x-mpeg;text/xml",
-            "Content-Disposition": "attachment; filename=" + file
-          });
+          // response.writeHead(200, {
+          //   "Content-Type": "audio/mpeg3;audio/x-mpeg-3;video/mpeg;video/x-mpeg;text/xml",
+          //   "Content-Disposition": "attachment; filename=" + file
+          // });
           // fs.createReadStream(file).pipe(response);
 
           // response.setHeader('Content-Type', 'audio/mpeg3;audio/x-mpeg-3;video/mpeg;video/x-mpeg;text/xml')
@@ -64,7 +70,6 @@ class Router {
       .catch((error) => {
         return response.status(400).json({"error": error})
       })
-
     })
 
     return this.router

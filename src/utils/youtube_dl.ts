@@ -67,15 +67,6 @@ export default class YoutubeDl {
     })
   }
 
-  // public async pipeFileToClient(file: string ,workbook: any, response: Response) {
-  //   response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-  //   response.setHeader("Content-Disposition", "attachment; filename=" + file)
-  //   response.status(HttpStatus.OK)
-  //   await workbook.xlsx.write(response)
-  // response.end()
-  // }
-
-
 }
 
 
