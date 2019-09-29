@@ -1,7 +1,11 @@
 let socket = io('/')
 
 socket.on('progress', (data) => {
-  console.log(data)
+  // loader
+  let d = document.getElementById('conv-d');
+  let p = document.getElementById('percent');
+  let percent = parseInt(data.progress.percentage);
+  p.innerHTML = `${percent}%`
 })
 
 var title;
@@ -17,6 +21,7 @@ function downloadFile(videoUrl) {
     })
     .then((resp) => {
       if (resp.status === 400) {
+        showError()
         return reject(resp)
       }
       else {
@@ -24,6 +29,7 @@ function downloadFile(videoUrl) {
       }
     })
     .catch((error) => {
+      showError()
       console.log(error)
     })
   })
@@ -41,16 +47,35 @@ function verifyUrl(url) {
 document.getElementById('convert-and-download').addEventListener('click', () => {
     const videoUrl = document.getElementById('input-field-url').value;
     if (verifyUrl(videoUrl)) {
+      let d = document.getElementById('conv-d');
+      let p = document.getElementById('percent');
+      d.style.opacity = 1;
+      p.style.opacity = 1;
       downloadFile(videoUrl)
       .then((blob) => {
         download(blob, title);
       })
       .catch((error) => {
+        let d = document.getElementById('conv-d');
+        let p = document.getElementById('percent');
+        d.style.opacity = 0;
+        p.style.opacity = 0;
+        showError();
         console.log(error)
       })
     }
     else {
+      showError()
       console.log('error')
       return false
     }
 })
+
+
+function showError() {
+  let error = document.getElementById('error-prompt')
+  error.style.opacity = 1;
+  setTimeout(() => {
+    error.style.opacity = 0;
+  }, 2000)
+}

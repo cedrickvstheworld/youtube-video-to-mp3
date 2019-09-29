@@ -1,8 +1,9 @@
-body {
+body, html {
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Livvic';
 }
+
 
 #index-wrapper {
   background-color: rgb(39, 39, 39);
@@ -11,11 +12,18 @@ body {
 }
 
 #index-container {
-  padding-top: 50px;
+  height: 100vh;
   padding-left: 20px;
   padding-right: 20px;
   display: grid;
   justify-items: center;
+  align-items: center;
+}
+
+#error-prompt {
+  color: rgb(212, 29, 29);
+  opacity: 0;
+  transition: 0.1s
 }
 
 #input-field-url {
@@ -27,7 +35,6 @@ body {
   border-radius: 10px;
   padding-left: 10px;
   padding-right: 10px;
-  font-weight: bold;
 }
 
 #button-container {
@@ -35,6 +42,13 @@ body {
   margin-bottom: 30px;
   display: grid;
   justify-items: end;
+}
+
+#percent, #conv-d {
+  margin-top: 5px;
+  margin-bottom: 8px;
+  color: whitesmoke;
+  opacity: 0;
 }
 
 #convert-and-download {
@@ -58,4 +72,11 @@ body {
 #convert-and-download:hover {
   background-color: rgb(228, 228, 68);
   color: rgb(26, 26, 26);
+}
+
+
+@media (max-width: 700px) {
+  #input-field-url {
+    width: 290px;
+  }
 }
