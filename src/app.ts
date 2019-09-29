@@ -3,7 +3,7 @@
  * @private
  */
 import express, { Application } from 'express'
-import socket from 'socket.io'
+import SocketIO from 'socket.io'
 import morgan from 'morgan'
 import nunjucks from 'nunjucks'
 
@@ -24,9 +24,9 @@ import {Socket} from 'socket.io'
 class Main {
   // type declarations
   private app: Application
-  // private socket: Socket
   private port: number
   private server: any
+  private io: any
 
   constructor() {
     this.app = express()
@@ -39,9 +39,11 @@ class Main {
    * @public
    */
   public listen() {
-    this.app.listen(this.port, (): void => {
+    const server = this.app.listen(this.port, (): void => {
       console.log(`Server is fucking listening to port ${this.port} . . .`)
     })
+    this.io = SocketIO(server)
+    this.loadWebSocketConfig()
   }
 
   /**
@@ -51,6 +53,27 @@ class Main {
   private mainRouter() {
     this.app.use('', indexRouter)
   }
+
+  // WebSocket Init and Config
+ private loadWebSocketConfig() {
+   let webSocketClients: Array<any> = []
+   this.app.set("ws", this.io)
+   this.app.set("ws_clients", webSocketClients)
+   // listen to web sockets connection
+   this.io.on("connection", (socket: any) => {
+     // push socket id to memory Array
+     webSocketClients.push(socket.id)
+     // log client connections
+     console.log(
+       `*** ${webSocketClients.length} web socket client/s connected`
+     )
+     // listen to web sockets disconnect, remove socket id to memory Array
+     socket.on("disconnect", (socket: any) => {
+       webSocketClients.splice(webSocketClients.indexOf(socket.id), 1)
+     })
+   })
+ }
+
 
   /**
    * Initialize server configurations

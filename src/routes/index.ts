@@ -42,6 +42,7 @@ class Router {
      * @public
      */
     this.router.get('/ytdlmp3', async (request: Request, response: Response) => {
+      const ws = request.app.get('ws')
       const {videoUrl} = request.query
       if (!videoUrl) {
         return response.status(400).json({"error": 'fuck you asshole'})
@@ -49,23 +50,22 @@ class Router {
       const ytmp3 = new youtubeToMp3(videoUrl)
       ytmp3.verifyUrl(videoUrl)
       .then(() => {
-        ytmp3.downloadOneFile()
+        ytmp3.downloadOneFile(ws)
         .then((mp3File) => {
           const file = `./mp3/${mp3File}`
-          response.download(file)
-
-          // response.writeHead(200, {
-          //   "Content-Type": "audio/mpeg3;audio/x-mpeg-3;video/mpeg;video/x-mpeg;text/xml",
-          //   "Content-Disposition": "attachment; filename=" + file
-          // });
-          // fs.createReadStream(file).pipe(response);
-
-          // response.setHeader('Content-Type', 'audio/mpeg3;audio/x-mpeg-3;video/mpeg;video/x-mpeg;text/xml')
-          // response.setHeader("Content-Disposition", "attachment; filename=" + file)
-          // response.status(200)
-          // response.end()
+          // @ts-ignore
+          ws.emit('emitTitle', {title: mp3File})
+          response.download(file, () => {
+            fs.unlink(file, (error) => {
+              if (error) {
+                console.log(error)
+              }
+            })
+          })
         })
-        // emit socket OK status here
+        .catch(error => {
+          response.status(400).json(error)
+        })
       })
       .catch((error) => {
         return response.status(400).json({"error": error})
