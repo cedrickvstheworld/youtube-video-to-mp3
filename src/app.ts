@@ -30,7 +30,7 @@ class Main {
 
   constructor() {
     this.app = express()
-    this.port = 5000
+    this.port = 8090
     this.appConfig()
   }
 
