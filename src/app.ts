@@ -5,6 +5,8 @@
 import express, { Application } from 'express'
 import SocketIO from 'socket.io'
 import morgan from 'morgan'
+// @ts-ignore
+import fingerprint from 'express-fingerprint'
 import nunjucks from 'nunjucks'
 
 /**
@@ -89,6 +91,13 @@ class Main {
       autoescape: true
     })
     this.app.set('view engine', 'html')
+    this.app.use(fingerprint({
+      parameters: [
+        fingerprint.useragent,
+        fingerprint.acceptHeaders,
+        fingerprint.geoip
+      ]
+    }))
     this.mainRouter()
   }
 

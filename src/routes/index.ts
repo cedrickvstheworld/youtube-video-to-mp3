@@ -21,9 +21,11 @@ import {Request, Response, NextFunction} from 'express'
 class Router {
   // type declarations
   router: any
+  requestQueue: Array<string>
 
   constructor() {
     this.router = express.Router()
+    this.requestQueue = []
   }
 
   /**
@@ -42,6 +44,12 @@ class Router {
      * @public
      */
     this.router.get('/ytdlmp3', async (request: Request, response: Response) => {
+      // @ts-ignore
+      const fingerprint = request.fingerprint.hash
+      if (this.requestQueue.indexOf(fingerprint) !== -1) {
+        return response.status(400).json({"error": 'you cannot convert two videos at a time. I did not fucking own a powerful server'})
+      }
+      this.requestQueue.push(fingerprint)
       const ws = request.app.get('ws')
       const {videoUrl} = request.query
       if (!videoUrl) {
@@ -56,6 +64,7 @@ class Router {
           // @ts-ignore
           ws.emit('emitTitle', {title: mp3File})
           response.download(file, () => {
+            this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
             fs.unlink(file, (error) => {
               if (error) {
                 console.log(error)
@@ -64,10 +73,12 @@ class Router {
           })
         })
         .catch(error => {
+          this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
           response.status(400).json(error)
         })
       })
       .catch((error) => {
+        this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
         return response.status(400).json({"error": error})
       })
     })

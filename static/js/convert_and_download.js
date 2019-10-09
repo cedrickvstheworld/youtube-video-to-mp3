@@ -1,5 +1,7 @@
 let socket = io('/')
 
+let onQueue = false;
+
 socket.on('progress', (data) => {
   // loader
   let d = document.getElementById('conv-d');
@@ -21,7 +23,7 @@ function downloadFile(videoUrl) {
     })
     .then((resp) => {
       if (resp.status === 400) {
-        showError()
+        showError('Invalid URL')
         return reject(resp)
       }
       else {
@@ -29,7 +31,7 @@ function downloadFile(videoUrl) {
       }
     })
     .catch((error) => {
-      showError()
+      showError('Invalid URL')
       console.log(error)
     })
   })
@@ -44,38 +46,52 @@ function verifyUrl(url) {
   return false
 }
 
-document.getElementById('convert-and-download').addEventListener('click', () => {
+document.getElementById('convert-and-download').addEventListener('click', async () => {
+    if (onQueue) {
+      return showError('You cannot convert multiple media at the same time. Jed does not have a powerful server . . .')
+    }
+    onQueue = true
     const videoUrl = document.getElementById('input-field-url').value;
     if (verifyUrl(videoUrl)) {
-      let d = document.getElementById('conv-d');
-      let p = document.getElementById('percent');
-      d.style.opacity = 1;
-      p.style.opacity = 1;
+      loaderVisibile(true)
       downloadFile(videoUrl)
       .then((blob) => {
+        onQueue = false
+        loaderVisibile(false)
         download(blob, title);
       })
       .catch((error) => {
-        let d = document.getElementById('conv-d');
-        let p = document.getElementById('percent');
-        d.style.opacity = 0;
-        p.style.opacity = 0;
-        showError();
+        onQueue = false
+        loaderVisibile(false)
+        showError('Invalid URL');
         console.log(error)
       })
     }
     else {
-      showError()
+      onQueue = false
+      showError('Invalid URL')
+      loaderVisibile(false)
       console.log('error')
       return false
     }
 })
 
 
-function showError() {
+function showError(msg) {
   let error = document.getElementById('error-prompt')
+  error.innerHTML = msg
   error.style.opacity = 1;
   setTimeout(() => {
     error.style.opacity = 0;
+    error.innerHTML = '...';
   }, 2000)
+}
+
+function loaderVisibile(fuck) {
+  let d = document.getElementById('conv-d');
+  let p = document.getElementById('percent');
+  p.innerHTML = "0%"
+  let state = fuck ? 1 : 0
+  d.style.opacity = state;
+  p.style.opacity = state;
 }

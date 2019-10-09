@@ -34,7 +34,6 @@ export default class YoutubeDl {
       this.file.download(this.getVideoId(this.url))
       this.file.on('progress', (progress: any) => {
         webSocket.emit('progress', progress)
-        console.log(progress.progress.percentage)
       })
       this.file.on("finished", (error: any, data: any) => {
         resolve(`${data.videoTitle}.mp3`)

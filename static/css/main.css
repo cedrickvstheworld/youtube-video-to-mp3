@@ -20,6 +20,10 @@ body, html {
   align-items: center;
 }
 
+#title {
+  color: #f1f1f1;
+}
+
 #error-prompt {
   color: rgb(212, 29, 29);
   opacity: 0;
@@ -54,12 +58,12 @@ body, html {
 #convert-and-download {
   outline: none;
   box-shadow: none;
-  background-color: rgb(255, 255, 75);
+  background-color: rgba(22, 180, 180, 0.801);
   border: none;
   border-radius: 10px;
   height: 40px;
   font-weight: bold;
-  color: rgb(26, 26, 26);
+  color: whitesmoke;
   padding-left: 10px;
   padding-right: 10px;
   cursor: pointer;
@@ -70,10 +74,28 @@ body, html {
 }
 
 #convert-and-download:hover {
-  background-color: rgb(228, 228, 68);
-  color: rgb(26, 26, 26);
+  background-color: rgba(22, 180, 180, 0.651);
+  color: whitesmoke;
 }
 
+.link {
+  text-decoration: none;
+  color: rgb(22, 180, 180);
+  margin: -10; 
+}
+
+#link-container {
+  /* display: grid; */
+  /* text-align: center; */
+}
+
+#gh {
+  color: rgba(245, 245, 245, 0.671);
+}
+
+.white-text {
+  color: rgba(245, 245, 245, 0.671); 
+}
 
 @media (max-width: 700px) {
   #input-field-url {
