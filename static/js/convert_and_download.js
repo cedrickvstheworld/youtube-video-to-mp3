@@ -37,6 +37,7 @@ function downloadFile(videoUrl) {
           return reject({ resp, error: dontMultipleError })
         }
         else {
+          console.log('xxxxxxxxxHEEEEEREEEE')
           return resolve(resp.blob());
         }
       })
@@ -65,6 +66,7 @@ document.getElementById('convert-and-download').addEventListener('click', async 
     loaderVisibile(true)
     downloadFile(videoUrl)
       .then((blob) => {
+        console.log('HEEEEEREEEE')
         onQueue = false
         loaderVisibile(false)
         download(blob, title);
