@@ -37,7 +37,9 @@ class YoutubeDl {
     downloadOneFile(webSocket, socketId) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.file.download(this.getVideoId(this.url));
+                let url = this.getVideoId(this.url);
+                console.log(url);
+                this.file.download(url);
                 this.file.on('progress', (progress) => {
                     webSocket.to(`${socketId}`).emit('progress', progress);
                 });
@@ -55,9 +57,10 @@ class YoutubeDl {
      * @private
      */
     getVideoId(url) {
-        let getId = url.split('=')[1] || url.split('/')[-1];
-        let videoUrl = getId !== 'undefined' ? getId : url.split('/')[url.split('/').length - 1];
-        return videoUrl;
+        // @ts-ignore
+        url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+        let x = (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
+        return x;
     }
     /**
      * verify is url is valid
@@ -66,7 +69,7 @@ class YoutubeDl {
     verifyUrl(url) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                let valid = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+                let valid = /^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com)\/([\w\/]+)([\?].*)?$/;
                 if (valid.test(url)) {
                     resolve(true);
                 }
