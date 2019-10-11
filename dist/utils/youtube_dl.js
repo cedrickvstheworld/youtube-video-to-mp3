@@ -66,9 +66,8 @@ class YoutubeDl {
     verifyUrl(url) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                let validLong = /^https\:\/\/www\.youtube\.com\/watch\?v\=+[a-zA-Z0-9-._]+$/;
-                let validShort = /^https:\/\/youtu.be\/+[a-zA-Z0-9-._]+$/;
-                if (validShort.test(url) || validLong.test(url)) {
+                let valid = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/;
+                if (valid.test(url)) {
                     resolve(true);
                 }
                 reject(false);

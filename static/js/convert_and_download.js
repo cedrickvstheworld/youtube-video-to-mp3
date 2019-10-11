@@ -37,7 +37,8 @@ function downloadFile(videoUrl) {
           return reject({ resp, error: dontMultipleError })
         }
         else {
-          console.log('xxxxxxxxxHEEEEEREEEE')
+          let p = document.getElementById('percent');
+          p.innerHTML = 'resolving file...'
           return resolve(resp.blob());
         }
       })
@@ -48,9 +49,8 @@ function downloadFile(videoUrl) {
 }
 
 function verifyUrl(url) {
-  let validLong = /^https\:\/\/www\.youtube\.com\/watch\?v\=+[a-zA-Z0-9-._]+$/
-  let validShort = /^https:\/\/youtu.be\/+[a-zA-Z0-9-._]+$/
-  if (validShort.test(url) || validLong.test(url)) {
+  let valid = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+  if (valid.test(url)) {
     return true
   }
   return false
@@ -66,7 +66,6 @@ document.getElementById('convert-and-download').addEventListener('click', async 
     loaderVisibile(true)
     downloadFile(videoUrl)
       .then((blob) => {
-        console.log('HEEEEEREEEE')
         onQueue = false
         loaderVisibile(false)
         download(blob, title);
