@@ -62,7 +62,7 @@ export default class YoutubeDl {
    */
   public async verifyUrl(url: string) {
     return new Promise((resolve, reject) => {
-      let valid = /^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$/
+      let valid = /^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/
       if (valid.test(url)) {
         resolve(true)
       }
