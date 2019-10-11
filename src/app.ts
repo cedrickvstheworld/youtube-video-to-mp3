@@ -32,7 +32,8 @@ class Main {
 
   constructor() {
     this.app = express()
-    this.port = 8090
+    // @ts-ignore
+    this.port = process.env.PORT || 8090
     this.appConfig()
   }
 

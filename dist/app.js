@@ -21,7 +21,8 @@ const index_1 = __importDefault(require("./routes/index"));
 class Main {
     constructor() {
         this.app = express_1.default();
-        this.port = 8090;
+        // @ts-ignore
+        this.port = process.env.PORT || 8090;
         this.appConfig();
     }
     /**
