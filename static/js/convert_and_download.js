@@ -1,5 +1,11 @@
 let socket = io('/')
 
+let socketObj = {}
+
+socket.on('connect', function () {
+  socketObj.id = socket.id
+});
+
 let onQueue = false;
 
 socket.on('progress', (data) => {
@@ -15,25 +21,28 @@ socket.on('emitTitle', (data) => {
   title = data.title;
 })
 
+let dontMultipleError = 'You cannot convert multiple media at the same time. Jed does not have a powerful server . . .'
+
 function downloadFile(videoUrl) {
   return new Promise((resolve, reject) => {
-    let url = `/ytdlmp3?videoUrl=${videoUrl}`;
+    let url = `/ytdlmp3?videoUrl=${videoUrl}&socketId=${socketObj.id}`;
     return fetch(url, {
       method: 'GET'
     })
-    .then((resp) => {
-      if (resp.status === 400) {
+      .then((resp) => {
+        if (resp.status === 400) {
+          return reject({ resp, error: 'Invalid URL' })
+        }
+        if (resp.status === 401) {
+          return reject({ resp, error: dontMultipleError })
+        }
+        else {
+          return resolve(resp.blob());
+        }
+      })
+      .catch((error) => {
         showError('Invalid URL')
-        return reject(resp)
-      }
-      else {
-        return resolve(resp.blob());
-      }
-    })
-    .catch((error) => {
-      showError('Invalid URL')
-      console.log(error)
-    })
+      })
   })
 }
 
@@ -47,14 +56,14 @@ function verifyUrl(url) {
 }
 
 document.getElementById('convert-and-download').addEventListener('click', async () => {
-    if (onQueue) {
-      return showError('You cannot convert multiple media at the same time. Jed does not have a powerful server . . .')
-    }
-    onQueue = true
-    const videoUrl = document.getElementById('input-field-url').value;
-    if (verifyUrl(videoUrl)) {
-      loaderVisibile(true)
-      downloadFile(videoUrl)
+  if (onQueue) {
+    return showError(dontMultipleError)
+  }
+  onQueue = true
+  const videoUrl = document.getElementById('input-field-url').value;
+  if (verifyUrl(videoUrl)) {
+    loaderVisibile(true)
+    downloadFile(videoUrl)
       .then((blob) => {
         onQueue = false
         loaderVisibile(false)
@@ -63,17 +72,15 @@ document.getElementById('convert-and-download').addEventListener('click', async 
       .catch((error) => {
         onQueue = false
         loaderVisibile(false)
-        showError('Invalid URL');
-        console.log(error)
+        showError(error.error);
       })
-    }
-    else {
-      onQueue = false
-      showError('Invalid URL')
-      loaderVisibile(false)
-      console.log('error')
-      return false
-    }
+  }
+  else {
+    onQueue = false
+    showError('Invalid URL')
+    loaderVisibile(false)
+    return false
+  }
 })
 
 

@@ -2,7 +2,7 @@
   "name": "yt_mp3",
   "version": "1.0.0",
   "description": "youtube video converter",
-  "main": "index.js",
+  "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",

@@ -84,11 +84,6 @@ body, html {
   margin: -10; 
 }
 
-#link-container {
-  /* display: grid; */
-  /* text-align: center; */
-}
-
 #gh {
   color: rgba(245, 245, 245, 0.671);
 }
@@ -97,8 +92,8 @@ body, html {
   color: rgba(245, 245, 245, 0.671); 
 }
 
-@media (max-width: 700px) {
+@media (max-width: 500px) {
   #input-field-url {
-    width: 290px;
+    width: 95%;
   }
 }

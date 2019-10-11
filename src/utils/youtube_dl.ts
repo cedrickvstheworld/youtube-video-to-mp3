@@ -29,11 +29,11 @@ export default class YoutubeDl {
    * @public
    * @param url : video url
    */
-  public async downloadOneFile(webSocket: any) {
+  public async downloadOneFile(webSocket: any, socketId: string) {
     return new Promise((resolve, reject) => {
       this.file.download(this.getVideoId(this.url))
       this.file.on('progress', (progress: any) => {
-        webSocket.emit('progress', progress)
+        webSocket.to(`${socketId}`).emit('progress', progress)
       })
       this.file.on("finished", (error: any, data: any) => {
         resolve(`${data.videoTitle}.mp3`)

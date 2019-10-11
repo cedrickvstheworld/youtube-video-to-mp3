@@ -47,22 +47,22 @@ class Router {
       // @ts-ignore
       const fingerprint = request.fingerprint.hash
       if (this.requestQueue.indexOf(fingerprint) !== -1) {
-        return response.status(400).json({"error": 'you cannot convert two videos at a time. I did not fucking own a powerful server'})
+        return response.status(401).json({error: 'you cannot convert two videos at a time. I did not fucking own a powerful server'})
       }
       this.requestQueue.push(fingerprint)
       const ws = request.app.get('ws')
-      const {videoUrl} = request.query
+      const {videoUrl, socketId} = request.query
       if (!videoUrl) {
         return response.status(400).json({"error": 'fuck you asshole'})
       }
       const ytmp3 = new youtubeToMp3(videoUrl)
       ytmp3.verifyUrl(videoUrl)
       .then(() => {
-        ytmp3.downloadOneFile(ws)
+        ytmp3.downloadOneFile(ws, socketId)
         .then((mp3File) => {
           const file = `./mp3/${mp3File}`
           // @ts-ignore
-          ws.emit('emitTitle', {title: mp3File})
+          ws.to(`${socketId}`).emit('emitTitle', {title: mp3File})
           response.download(file, () => {
             this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
             fs.unlink(file, (error) => {
