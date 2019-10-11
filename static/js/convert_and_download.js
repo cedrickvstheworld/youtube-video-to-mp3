@@ -49,7 +49,7 @@ function downloadFile(videoUrl) {
 }
 
 function verifyUrl(url) {
-  let valid = /^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+/
+  let valid = /^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com)\/([\w\/]+)([\?].*)?$/
   if (valid.test(url)) {
     return true
   }
