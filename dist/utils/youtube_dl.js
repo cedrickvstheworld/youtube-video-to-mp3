@@ -69,11 +69,13 @@ class YoutubeDl {
     verifyUrl(url) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                let valid = /^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com)\/([\w\/]+)([\?].*)?$/;
-                if (valid.test(url)) {
-                    resolve(true);
+                // @ts-ignore
+                url = url.split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+                let x = (url[2] !== undefined) ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
+                if (!x) {
+                    return reject(false);
                 }
-                reject(false);
+                return resolve(true);
             });
         });
     }
