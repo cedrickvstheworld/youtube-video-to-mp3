@@ -37,6 +37,8 @@ function downloadFile(videoUrl) {
           return reject({ resp, error: dontMultipleError })
         }
         else {
+          let p = document.getElementById('percent');
+          p.innerHTML = 'resolving file...'
           return resolve(resp.blob());
         }
       })
@@ -47,9 +49,8 @@ function downloadFile(videoUrl) {
 }
 
 function verifyUrl(url) {
-  let validLong = /^https\:\/\/www\.youtube\.com\/watch\?v\=+[a-zA-Z0-9-._]+$/
-  let validShort = /^https:\/\/youtu.be\/+[a-zA-Z0-9-._]+$/
-  if (validShort.test(url) || validLong.test(url)) {
+  let valid = /^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com)\/([\w\/]+)([\?].*)?$/
+  if (valid.test(url)) {
     return true
   }
   return false

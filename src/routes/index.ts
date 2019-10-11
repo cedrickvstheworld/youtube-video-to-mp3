@@ -74,11 +74,13 @@ class Router {
         })
         .catch(error => {
           this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
+          console.log(error)
           response.status(400).json(error)
         })
       })
       .catch((error) => {
         this.requestQueue.splice(this.requestQueue.indexOf(fingerprint), 1)
+        console.log(error)
         return response.status(400).json({"error": error})
       })
     })

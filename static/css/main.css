@@ -96,4 +96,10 @@ body, html {
   #input-field-url {
     width: 95%;
   }
+  #index-container {
+    align-items: flex-start;
+  }
+  #main-div {
+    margin-top: 20px;
+  }
 }
