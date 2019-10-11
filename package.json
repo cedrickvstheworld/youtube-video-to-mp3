@@ -1,6 +1,9 @@
 {
   "name": "yt_mp3",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.16.3"
+  },
   "description": "youtube video converter",
   "main": "dist/app.js",
   "scripts": {
@@ -28,9 +31,5 @@
     "nodemon": "^1.19.1",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
-  } ,
-  "engines": {
-    "node": ">=10.0.0",
-    "npm": ">=6.0.0"
   }
 }
