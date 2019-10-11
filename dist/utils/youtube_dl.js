@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Libraries
  * @private
  */
+// @ts-ignore
 const youtube_mp3_downloader_1 = __importDefault(require("youtube-mp3-downloader"));
 class YoutubeDl {
     constructor(url) {

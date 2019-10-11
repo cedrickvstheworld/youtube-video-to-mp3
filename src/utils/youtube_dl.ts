@@ -2,6 +2,7 @@
  * Libraries
  * @private
  */
+// @ts-ignore
 import youtubeToMp3 from 'youtube-mp3-downloader'
 
 
